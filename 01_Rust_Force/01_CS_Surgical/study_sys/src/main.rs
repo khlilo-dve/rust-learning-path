@@ -40,6 +40,9 @@ impl Classroom {
         let total_score: u64 = self.students.iter().map(|s| s.score).sum();
         Some(total_score as f64 / self.students.len() as f64)
     }
+    fn change_score(&mut self){
+        self.students.iter_mut().for_each(|s| s.score+=5)
+    }
 }
 
 fn main() {
@@ -48,6 +51,7 @@ fn main() {
     let s2 = Student::new("bob", 20);
     my_class.enroll(s1);
     my_class.enroll(s2);
+    my_class.change_score();
     my_class.print_all();
     match my_class.average_score() {
         Some(avg) => println!("班级平均分：{:.2}", avg),
