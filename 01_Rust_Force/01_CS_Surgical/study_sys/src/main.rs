@@ -43,6 +43,12 @@ impl Classroom {
     fn change_score(&mut self){
         self.students.iter_mut().for_each(|s| s.score+=5)
     }
+    fn people_counting(&self){
+        let passed_peopel=self.students.iter()
+        .filter(|s| s.score>100)
+        .count();
+        println!("大于100分的学生人数为:{}",passed_peopel)
+    }
 }
 
 fn main() {
@@ -57,4 +63,5 @@ fn main() {
         Some(avg) => println!("班级平均分：{:.2}", avg),
         None => println!("班级为空，暂无平均分数据。"),
     }
+    my_class.people_counting()
 }
