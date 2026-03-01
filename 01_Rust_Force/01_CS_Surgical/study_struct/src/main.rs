@@ -1,3 +1,4 @@
+#[derive(Debug)]
 struct Transaction {
     from: String,
     to: String,
@@ -24,34 +25,33 @@ impl Transaction {
     }
 }
 
-struct Blockchain {
-    ledger: Vec<Transaction>,
+#[derive(Debug)]
+struct Block {
+    index: u64,
+    timestamp: i64,
+    transaction: Vec<Transaction>,
+    previous_hash: String,
+    hash: String,
 }
 
-impl Blockchain {
-    fn new() -> Blockchain {
-        Blockchain { ledger: Vec::new() }
-    }
-    fn add_transaction(&mut self, tx: Transaction) {
-        self.ledger.push(tx);
-        println!("系统成功录入一笔交易");
-    }
-    fn print_chain(&self) {
-        println!("\n区块链账本数据");
-        for item in &self.ledger {
-            item.print_receipt();
+impl Block {
+    fn new(index: u64, transaction: Vec<Transaction>, previous_hash: String) -> Block {
+        Block {
+            index,
+            timestamp: (1700000000),
+            transaction,
+            previous_hash,
+            hash: String::from("uncalculated_hush"),
         }
-        println!("共计{}笔数据\n", self.ledger.len());
     }
 }
+
 fn main() {
-    print!("区块链系统启动中");
-    let mut chain = Blockchain::new();
+    println!("Web3 节点启动中...");
     let tx1 = Transaction::new(String::from("Alice"), String::from("Bob"), 50);
     let tx2 = Transaction::new(String::from("Bob"), String::from("Dave"), 20);
     let tx3 = Transaction::new(String::from("Dave"), String::from("Eve"), 100);
-    chain.add_transaction(tx1);
-    chain.add_transaction(tx2);
-    chain.add_transaction(tx3);
-    chain.print_chain();
+    let tx_pool = vec![tx1, tx2, tx3];
+    let genesis_block = Block::new(0, tx_pool, String::from("0"));
+    println!("成功挖出创世区块：{:#?}", genesis_block);
 }
