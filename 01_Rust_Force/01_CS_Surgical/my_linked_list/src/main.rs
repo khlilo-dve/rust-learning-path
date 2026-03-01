@@ -1,52 +1,44 @@
-struct Node{
-    value:u64,
-    next:Option<Box<Node>>,
+struct Node {
+    value: u64,
+    next: Option<Box<Node>>,
 }
 
-struct LinkedList{
-    head:Option<Box<Node>>,
+struct LinkedList {
+    head: Option<Box<Node>>,
 }
 
-impl LinkedList{
-    fn new()->Self{
-        LinkedList{
-            head:None,
-        }
+impl LinkedList {
+    fn new() -> Self {
+        LinkedList { head: None }
     }
-    fn push(&mut self,value:u64){
-        let new_node=Box::new(Node{
-            value:value,
-            next:self.head.take()
+    fn push(&mut self, value: u64) {
+        let new_node = Box::new(Node {
+            value: value,
+            next: self.head.take(),
         });
-        self.head=Some(new_node);
+        self.head = Some(new_node);
     }
-    fn pop(&mut self)->Option<u64>{
-        let old_head=self.head.take();
-        match old_head{
-            Some(node)=>{
-                self.head=node.next;
+    fn pop(&mut self) -> Option<u64> {
+        let old_head = self.head.take();
+        match old_head {
+            Some(node) => {
+                self.head = node.next;
                 Some(node.value)
             }
-            None=>None
+            None => None,
         }
     }
 }
 
-fn main(){
-    let mut list=LinkedList::new();
-    list.push(100);
-    list.push(200);
-    println!("成功将100和200压入链表!");
-    match list.pop(){
-        Some(val)=>println!("弹出{}",val),
-        None=>println!("链表已经是空的了"),
+impl Drop for LinkedList {
+    fn drop(&mut self) {
+        while let Some(_) = self.pop() {}
     }
-    match list.pop() {
-        Some(val) => println!("成功弹出了：{}", val),
-        None => println!("链表已经是空的了！"),
-    }
-    match list.pop() {
-        Some(val) => println!("成功弹出了：{}", val),
-        None => println!("链表已经是空的了！"),
-    }
+}
+
+fn main() {
+    let mut list = LinkedList::new();
+    println!("开始装填100000枚核弹头...");
+    (0..100000).for_each(|i| list.push(i));
+    println!("装填完毕！准备启动Dorp拆弹程序");
 }
