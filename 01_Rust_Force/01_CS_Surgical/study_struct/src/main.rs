@@ -1,3 +1,5 @@
+use sha2::{Digest, Sha256};
+
 #[derive(Debug)]
 struct Transaction {
     from: String,
@@ -36,13 +38,22 @@ struct Block {
 
 impl Block {
     fn new(index: u64, transaction: Vec<Transaction>, previous_hash: String) -> Block {
-        Block {
+        let mut block = Block {
             index,
             timestamp: (1700000000),
             transaction,
             previous_hash,
-            hash: String::from("uncalculated_hush"),
-        }
+            hash: String::new(),
+        };
+        block.hash = block.calculate_hash();
+        block
+    }
+    fn calculate_hash(&self) -> String {
+        let block_data = format!("{}{}{}", self.index, self.timestamp, self.previous_hash);
+        let mut hasher = Sha256::new();
+        hasher.update(block_data.as_bytes());
+        let result = hasher.finalize();
+        format!("{:x}", result)
     }
 }
 
