@@ -57,12 +57,34 @@ impl Block {
     }
 }
 
+#[derive(Debug)]
+struct Blockchain {
+    chain: Vec<Block>,
+}
+
+impl Blockchain {
+    fn new() -> Self {
+        let empty_tx_pool = vec![];
+        let genesis_block = Block::new(0, empty_tx_pool, String::from("0"));
+        Blockchain {
+            chain: vec![genesis_block],
+        }
+    }
+    fn add_block(&mut self, transactions: Vec<Transaction>) {
+        let previous_block = self.chain.last().unwrap();
+        let previous_hash = previous_block.hash.clone();
+        let new_index = previous_block.index + 1;
+        let new_block = Block::new(new_index, transactions, previous_hash);
+        self.chain.push(new_block);
+    }
+}
+
 fn main() {
     println!("Web3 节点启动中...");
+    let mut my_crypto_chain = Blockchain::new();
     let tx1 = Transaction::new(String::from("Alice"), String::from("Bob"), 50);
     let tx2 = Transaction::new(String::from("Bob"), String::from("Dave"), 20);
-    let tx3 = Transaction::new(String::from("Dave"), String::from("Eve"), 100);
-    let tx_pool = vec![tx1, tx2, tx3];
-    let genesis_block = Block::new(0, tx_pool, String::from("0"));
-    println!("成功挖出创世区块：{:#?}", genesis_block);
+    println!("正在打包区块 #1...");
+    my_crypto_chain.add_block(vec![tx1, tx2]);
+    println!("当前账本状态: {:#?}", my_crypto_chain);
 }
