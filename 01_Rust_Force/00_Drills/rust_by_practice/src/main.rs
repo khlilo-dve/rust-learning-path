@@ -1,0 +1,2 @@
+mod variables;
+fn main() {}
